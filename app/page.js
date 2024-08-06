@@ -27,12 +27,14 @@ export default function Home() {
       await setDoc(doc(firestore, 'pantry', item), {quantity: 1})
     }
     setItemName('')
+    updatePantry()
   }
 
   const deleteItem = async (item) => {
     console.log(item)
     const docRef = doc(firestore, 'pantry', item)
     await deleteDoc(docRef)
+    updatePantry()
   }
 
   const incrementItem = async (item, mul) => {
@@ -40,6 +42,7 @@ export default function Home() {
     const docSnap = await getDoc(docRef);
 
     await setDoc(doc(firestore, 'pantry', item), {quantity: docSnap.data().quantity + (1*mul)})
+    updatePantry()
   }
 
   useEffect(() => {
@@ -76,7 +79,6 @@ export default function Home() {
             <Button variant="contained" sx={{ height: '56px' }}
             onClick={() => {
               addItem(itemName)
-              updatePantry()
             }}>Add</Button>
 
           </Box>
@@ -104,7 +106,6 @@ export default function Home() {
                   <Button size="large" variant="outlined"
                   onClick={() => {
                     incrementItem(item.name, -1)
-                    updatePantry()
                   }}>-</Button>
 
                   <Typography variant="h3">{item.quantity}</Typography>
@@ -112,13 +113,11 @@ export default function Home() {
                   <Button size="large" variant="outlined"
                   onClick={() => {
                     incrementItem(item.name, 1)
-                    updatePantry()
                   }}>+</Button>
 
                   <Button color="error" size="small"
                   onClick={() => {
                     deleteItem(item.name)
-                    updatePantry()
                   }}><i class="material-icons">&#xe872;</i></Button>
 
                 </Box>
